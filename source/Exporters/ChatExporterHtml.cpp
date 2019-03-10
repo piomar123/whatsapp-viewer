@@ -80,31 +80,27 @@ std::string ChatExporterHtml::buildMessages(WhatsappChat &chat, std::set<int> &u
 			} break;
 			case MEDIA_WHATSAPP_IMAGE:
 			case MEDIA_WHATSAPP_GIF:
+			case MEDIA_WHATSAPP_VIDEO:
 			{
 				if (message.hasThumbnail())
 				{
-					output << "<div><img src=\"data:image/jpeg;base64," << base64_encode(message.getThumbnail(), message.getThumbnailSize()) << "\"></div>" << std::endl;
+					output << "<div>"
+						<< "<a href=\"" << message.getFilename() << "\">"
+						<< "<img src=\"data:image/jpeg;base64," << base64_encode(message.getThumbnail(), message.getThumbnailSize()) << "\">"
+						<< "</a></div>" << std::endl;
 				}
 				if (message.getMediaCaption().length() > 0)
 				{
 					output << "<div><span>" << message.getMediaCaption() << "</span></div>";
+				}
+				if (message.getMediaWhatsappType() == MEDIA_WHATSAPP_VIDEO)
+				{
+					output << "<span>[ Video ]</span>";
 				}
 			} break;
 			case MEDIA_WHATSAPP_AUDIO:
 			{
 				output << "<span>[ " << formatAudio(message) << " ]</span>";
-			} break;
-			case MEDIA_WHATSAPP_VIDEO:
-			{
-				if (message.hasThumbnail())
-				{
-					output << "<div><img src=\"data:image/jpeg;base64," << base64_encode(message.getThumbnail(), message.getThumbnailSize()) << "\"></div>" << std::endl;
-				}
-				if (message.getMediaCaption().length() > 0)
-				{
-					output << "<div><span>" << message.getMediaCaption() << "</span></div>";
-				}
-				output << "<span>[ Video ]</span>";
 			} break;
 			case MEDIA_WHATSAPP_CONTACT:
 			{
